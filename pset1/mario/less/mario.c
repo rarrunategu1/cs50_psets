@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #define BLOCK "#"
+#define SPACE "."
 
 int main(void)
 {
@@ -11,11 +12,23 @@ int main(void)
         height = get_int("Height: ");
     }
     while (height < 0 || height > 23);
-    for (int i = 0; i < height; i++)
+
+
+    int i;
+    for (i = 0; i < height; i++)
     {
 
-        printf(".");
-        printf(BLOCK);
+        for(int k = 0; k<i; k++)
+        {
+            printf(SPACE);
+        }
+        for(int j = 0; j<i+2; j++)
+        {
+            printf(BLOCK);
+        }
+
         printf("\n");
+
     }
+
 }
