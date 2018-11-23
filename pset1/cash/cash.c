@@ -3,5 +3,11 @@
 
 int main(void)
 {
+int change;
+do
+{
+ change = get_float("Change owed: ");
 
+}
+while(change < 0);
 }
