@@ -11,5 +11,11 @@ int main(void)
     {
       height = get_int("Height: ");
     }
-    while(height < 0 || height > 23);
+    while(height <= 0 || height >= 23);
+
+    int i;
+    for (i = 0; i < height; i++)
+    {
+        printf("%s\n", BLOCK);
+    }
 }
