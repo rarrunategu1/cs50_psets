@@ -2,23 +2,32 @@
 #include <stdio.h>
 #include <math.h>
 
+
+
 int main(void)
 {
     float change;
-    // float coin [4] = {0.25, 0.10, 0.05, 0.01};
-    // int totalCoins = 0;
+    int coin [4] = {25, 10, 5, 1};
+    int totalCoins = 0;
     do
         {
         change = get_float("Change owed: ");
 
         }
-    while(change < 0);
+    while (change < 0);
     change = change * 100;
+    int cents = (int) round(change * 100) / 100.0;
+     for (int i = 0; i < 4; i++)
+    {
+        while (coin[i] <= cents)
+        {
+            cents = cents - coin[i];
+            totalCoins++;
+        }
+    }
+    printf("%i\n", totalCoins);
 
-
-    printf("%f\n", change);
-
-
-    //printf("%.2f\n", change * 100);
 
 }
+
+
