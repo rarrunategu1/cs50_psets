@@ -24,7 +24,7 @@ int main(void)
         for (int j = height + 1; j > i + 2; j--)
         {
             printf(SPACE);
-        //3rd for loop: k = 0 to build the ladder with the hashes.  adds one has as long as k is less than i plus two(height of ladder printed)
+            //3rd for loop: k = 0 to build the ladder with the hashes.  adds one has as long as k is less than i plus two(height of ladder printed)
         }
         for (int k = 0; k < i + 2; k++)
         {
