@@ -26,80 +26,79 @@ int main(void)
     if (ccnum >= MIN16 && ccnum <= MAX16)
     {
         length = 16;
-        for(; length > 0; length--)
+        for (; length > 0; length--)
         {
-        int number = ccnum % 10;
-        //printf("length: %i\tDigit: %i\n", length, number);
-        ccnum = ccnum / 10;
+            int number = ccnum % 10;
+            //printf("length: %i\tDigit: %i\n", length, number);
+            ccnum = ccnum / 10;
 
-        if (length == 1)
-        {
-            firstNumber +=  number;
-        }
-        if (length == 2)
-        {
-            secondNumber += number;
-        }
+            if (length == 1)
+            {
+                firstNumber +=  number;
+            }
+            if (length == 2)
+            {
+                secondNumber += number;
+            }
         }
         firstTwo = firstNumber + secondNumber;
 
-        if(firstNumber == 4)
+        if (firstNumber == 4)
         {
-
             printf("VISA\n");
         }
 
-    else if(firstNumber == 5 && firstTwo >= 6 && firstTwo <=10)
-    {
-        printf("MASTERCARD");
-    }
+        else if (firstNumber == 5 && firstTwo >= 6 && firstTwo <= 10)
+        {
+            printf("MASTERCARD");
+        }
 
     }
 
-    else if(ccnum >= MIN15 && ccnum <= MAX15)
+    else if (ccnum >= MIN15 && ccnum <= MAX15)
     {
         length = 15;
-        for(; length > 0; length--)
+        for (; length > 0; length--)
         {
-        int number = ccnum % 10;
-        //printf("length: %i\tDigit: %i\n", length, number);
-        ccnum = ccnum / 10;
+            int number = ccnum % 10;
+            //printf("length: %i\tDigit: %i\n", length, number);
+            ccnum = ccnum / 10;
 
-        if (length == 1)
-        {
-            firstNumber +=  number;
-        }
-        if (length == 2)
-        {
-            secondNumber += number;
-        }
+            if (length == 1)
+            {
+                firstNumber +=  number;
+            }
+            if (length == 2)
+            {
+                secondNumber += number;
+            }
         }
         firstTwo = firstNumber + secondNumber;
-        if(firstNumber == 3 && (firstTwo == 7 || firstTwo == 10))
-    {
-        printf("AMEX\n");
+        if (firstNumber == 3 && (firstTwo == 7 || firstTwo == 10))
+        {
+            printf("AMEX\n");
+        }
     }
-}
 
-    else if(ccnum >= MIN13 && ccnum <= MAX13)
+    else if (ccnum >= MIN13 && ccnum <= MAX13)
     {
         length = 13;
-        for(; length > 0; length--)
+        for (; length > 0; length--)
         {
-        int number = ccnum % 10;
-        //printf("length: %i\tDigit: %i\n", length, number);
-        ccnum = ccnum / 10;
+            int number = ccnum % 10;
+            //printf("length: %i\tDigit: %i\n", length, number);
+            ccnum = ccnum / 10;
 
-        if (length == 1)
-        {
-            firstNumber +=  number;
+            if (length == 1)
+            {
+                firstNumber +=  number;
+            }
+
         }
 
-        }
 
 
-
-        if(firstNumber == 4)
+        if (firstNumber == 4)
         {
 
             printf("VISA\n");
@@ -111,11 +110,11 @@ int main(void)
         return 0;
     }
 
-int timesTwo = 0;
+    int timesTwo = 0;
     int noTimes = 0;
     int final = 0;
 
-    for(; length > 0; length--)
+    for (; length > 0; length--)
     {
         int digit = ccnum % 10;
         //printf("length: %i\tDigit: %i\n", length, digit);
