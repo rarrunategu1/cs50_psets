@@ -21,21 +21,21 @@ int main(void)
     int secondNumber = 0;
     int firstTwo = 0;
 
-
-
     if (ccnum >= MIN16 && ccnum <= MAX16)
     {
         length = 16;
         for (; length > 0; length--)
         {
+            //gets each digit in the card number
             int number = ccnum % 10;
-            //printf("length: %i\tDigit: %i\n", length, number);
             ccnum = ccnum / 10;
 
+            //takes the number at length 1 and assigns the number adds then number to firstNumber
             if (length == 1)
             {
                 firstNumber +=  number;
             }
+            //takes the number at length 2 and assigns the number adds then number to secondNumber
             if (length == 2)
             {
                 secondNumber += number;
@@ -43,6 +43,7 @@ int main(void)
         }
         firstTwo = firstNumber + secondNumber;
 
+        //checks if the card is a master or visa based on first digits
         if (firstNumber == 4)
         {
             printf("VISA\n");
@@ -61,7 +62,6 @@ int main(void)
         for (; length > 0; length--)
         {
             int number = ccnum % 10;
-            //printf("length: %i\tDigit: %i\n", length, number);
             ccnum = ccnum / 10;
 
             if (length == 1)
@@ -74,6 +74,7 @@ int main(void)
             }
         }
         firstTwo = firstNumber + secondNumber;
+
         if (firstNumber == 3 && (firstTwo == 7 || firstTwo == 10))
         {
             printf("AMEX\n");
@@ -86,7 +87,6 @@ int main(void)
         for (; length > 0; length--)
         {
             int number = ccnum % 10;
-            //printf("length: %i\tDigit: %i\n", length, number);
             ccnum = ccnum / 10;
 
             if (length == 1)
@@ -95,9 +95,6 @@ int main(void)
             }
 
         }
-
-
-
         if (firstNumber == 4)
         {
 
@@ -117,9 +114,9 @@ int main(void)
     for (; length > 0; length--)
     {
         int digit = ccnum % 10;
-        //printf("length: %i\tDigit: %i\n", length, digit);
         ccnum = ccnum / 10;
 
+        //grabs every even number length digit starting at end of card - Lughns algorithm
         if (length % 2 == 0)
         {
             int temp = digit * 2;
@@ -135,7 +132,7 @@ int main(void)
     //printf("timesTwo: %i\tnoTimes: %i\n", timesTwo, noTimes);
     final = noTimes + timesTwo;
 
-
+    //if last digit of the final answer is 0 then the card is valid
     if (final % 10 == 0)
     {
         printf("VALID\n");
