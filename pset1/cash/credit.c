@@ -14,17 +14,19 @@ int main(void)
 {
     long long ccnum = get_long_long("Number: ");
     int length = 0;
-
     printf("%lld\n", ccnum);
+
     if (ccnum >= MIN16 && ccnum <= MAX16)
     {
         printf("card may be Visa or Mastercard\n");
         length = 16;
+
     }
     else if(ccnum >= MIN15 && ccnum <= MAX15)
     {
         printf("card may be an AMEX\n");
         length = 15;
+
     }
     else if(ccnum >= MIN13 && ccnum <= MAX13)
     {
@@ -36,15 +38,27 @@ int main(void)
         printf("INVALID\n");
         return 0;
     }
+
+
+
+
+
     int timesTwo = 0;
     int noTimes = 0;
     int final = 0;
+    int firstnumber = 0;
+    int secondnumber = 0;
 
     for(; length > 0; length--)
     {
         int digit = ccnum % 10;
         //printf("length: %i\tDigit: %i\n", length, digit);
         ccnum = ccnum / 10;
+
+        if (length == 1 && digit == 4)
+        {
+            printf("VISA\n");
+        }
 
         if (length % 2 == 0)
         {
@@ -55,10 +69,14 @@ int main(void)
         {
             noTimes += digit;
         }
+
+
     }
     //printf("timesTwo: %i\tnoTimes: %i\n", timesTwo, noTimes);
     final = noTimes + timesTwo;
-    if (final) % 10 == 0)
+
+
+    if (final % 10 == 0)
     {
         printf("VALID\n");
     }
