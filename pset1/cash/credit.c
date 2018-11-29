@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <cs50.h>
-#include <string.h>
+
 
 #define MAX16 5599999999999999
 #define MAXV16 4999999999999999
