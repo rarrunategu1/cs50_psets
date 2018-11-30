@@ -7,28 +7,33 @@
 #define MAX15 379999999999999
 #define MIN15 370000000000000
 
-#define MAX13 49999999999999
-#define MIN13 40000000000000
+#define MAX13 4999999999999
+#define MIN13 4000000000000
+
+#define VISAFIRST 4
+#define MASTERCARDFIRST 5
+#define MASTERCARDSECONDMIN 1
+#define MASTERCARDSECONDMAX 5
+#define AMEXFIRST 3
+#define AMEXSECOND secondDigit == 4 || secondDigit == 7
+
 
 int main(void)
 {
     long long ccnum = get_long_long("Number: ");
     int length = 0;
 
-    printf("%lld\n", ccnum);
+    //printf("%lld\n", ccnum);
     if (ccnum >= MIN16 && ccnum <= MAX16)
     {
-        printf("card may be Visa or Mastercard\n");
         length = 16;
     }
     else if(ccnum >= MIN15 && ccnum <= MAX15)
     {
-        printf("card may be an AMEX\n");
         length = 15;
     }
     else if(ccnum >= MIN13 && ccnum <= MAX13)
     {
-        printf("card may be a Visa\n");
         length = 13;
     }
     else
@@ -39,10 +44,20 @@ int main(void)
     int timesTwo = 0;
     int noTimes = 0;
     int final = 0;
+    int firstDigit = 0;
+    int secondDigit = 0;
 
     for(; length > 0; length--)
     {
         int digit = ccnum % 10;
+        if (length == 2)
+        {
+            secondDigit = digit;
+        }
+        else if (length == 1)
+        {
+            firstDigit = digit;
+        }
         //printf("length: %i\tDigit: %i\n", length, digit);
         ccnum = ccnum / 10;
 
@@ -58,12 +73,21 @@ int main(void)
     }
     //printf("timesTwo: %i\tnoTimes: %i\n", timesTwo, noTimes);
     final = noTimes + timesTwo;
-    if (final) % 10 == 0)
+    if (final % 10 == 0)
     {
-        printf("VALID\n");
+        //printf("fd: %i\tsd: %i\n", firstDigit, secondDigit);
+        if (firstDigit == 4)
+        {
+            printf("VISA\n");
+        }
+        else if (firstDigit == 5 && secondDigit >= 1 && secondDigit <= 5)
+        {
+            printf("MASTERCARD\n");
+        }
+        else if(firstDigit == 3 && (secondDigit == 4 || secondDigit == 7))
+        {
+            printf("AMEX\n");
+        }
     }
-    else
-    {
-        printf("INVALID\n");
-    }
+
 }
