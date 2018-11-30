@@ -20,10 +20,12 @@ int main(void)
     int firstNumber = 0;
     int secondNumber = 0;
     int firstTwo = 0;
+    int modifier = 0;
 
     if (ccnum >= MIN16 && ccnum <= MAX16)
     {
         length = 16;
+        modifier = 1;
     }
 
     else if (ccnum >= MIN15 && ccnum <= MAX15)
@@ -52,9 +54,10 @@ int main(void)
         ccnum = ccnum / 10;
 
         //grabs every even number length digit starting at end of card - Lughns algorithm in the if else statement.  final tally at final int lower in the code
-        if (length % 2 == 0)
+        if ((length + modifier) % 2 == 0)
         {
             int temp = number * 2;
+
             timesTwo += temp % 10 + temp / 10;
         }
         else
