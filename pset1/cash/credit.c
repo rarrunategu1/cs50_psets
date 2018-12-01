@@ -22,17 +22,19 @@ int main(void)
 {
     long long ccnum = get_long_long("Number: ");
     int length = 0;
+    int modifier = 0;
 
     //printf("%lld\n", ccnum);
     if (ccnum >= MIN16 && ccnum <= MAX16)
     {
         length = 16;
+        modifier = 1;
     }
-    else if(ccnum >= MIN15 && ccnum <= MAX15)
+    else if (ccnum >= MIN15 && ccnum <= MAX15)
     {
         length = 15;
     }
-    else if(ccnum >= MIN13 && ccnum <= MAX13)
+    else if (ccnum >= MIN13 && ccnum <= MAX13)
     {
         length = 13;
     }
@@ -47,7 +49,7 @@ int main(void)
     int firstDigit = 0;
     int secondDigit = 0;
 
-    for(; length > 0; length--)
+    for (; length > 0; length--)
     {
         int digit = ccnum % 10;
         if (length == 2)
@@ -61,7 +63,7 @@ int main(void)
         //printf("length: %i\tDigit: %i\n", length, digit);
         ccnum = ccnum / 10;
 
-        if (length % 2 == 0)
+        if ((length + modifier) % 2 == 0)
         {
             int temp = digit * 2;
             timesTwo += temp % 10 + temp / 10;
@@ -84,7 +86,7 @@ int main(void)
         {
             printf("MASTERCARD\n");
         }
-        else if(firstDigit == 3 && (secondDigit == 4 || secondDigit == 7))
+        else if (firstDigit == 3 && (secondDigit == 4 || secondDigit == 7))
         {
             printf("AMEX\n");
         }
