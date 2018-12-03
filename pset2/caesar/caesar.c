@@ -13,11 +13,12 @@ int main(int argk, string argv[])
     {
         //turns key input to an integer from a string
         key = atoi(argv[1]);
-    }
+
 
     //gets user plaintext input
     string message = get_string("plaintext: ");
-    printf("%s\n", message);
+    //printf("%s\n", message);
+    printf("cyphertext: ");
 
     for(int i = 0; i < strlen(message); i++)
     {
@@ -29,18 +30,22 @@ int main(int argk, string argv[])
             {
                 printf("%c", (((message[i] - 'A') + key) % 26) + 'A');
             }
-            else
+            else if (islower(message[i]))
             {
                 printf("%c", (((message[i] - 'a') + key) % 26) + 'a');
             }
-
         }
-        else
-        {
-        printf("USAGE: arguments alphabetical only\n");
-        return 1;
+        else if(isalpha(message[i]) == 0)
+            {
+                printf("%c", message[i]);
+            }
         }
     }
+else
+{
+    printf("USAGE: arguments key \n");
+    return 1;
+}
     printf("\n");
     return 0;
 }
