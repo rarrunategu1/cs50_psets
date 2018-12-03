@@ -17,7 +17,7 @@ int main(int argk, string argkey[])
         //gets user plaintext input
         string message = get_string("plaintext: ");
         //printf("%s\n", message);
-        printf("cyphertext: ");
+        printf("ciphertext: ");
 
         for (int i = 0; i < strlen(message); i++)
         {
