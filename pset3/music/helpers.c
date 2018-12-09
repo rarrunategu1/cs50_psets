@@ -2,16 +2,34 @@
 
 #include <cs50.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "helpers.h"
 
 // Converts a fraction formatted as X/Y to eighths
 int duration(string fraction)
 {
-    // TODO
+    int beat;
+
+    for (int i = 0, length = strlen(fraction); i < length; i++)
+    {
+        if (fraction[i] == 49)
+        {
+            beat = 1;
+        }
+        else if (fraction[i] == 50)
+        {
+            beat = 2;
+        }
+        else
+        {
+            beat = 4;
+        }
+    }
+    return beat;
 }
 
-// Calculates frequency (in Hz) of a note
+//Calculates frequency (in Hz) of a note
 int frequency(string note)
 {
     // TODO
