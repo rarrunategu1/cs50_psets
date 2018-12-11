@@ -12,9 +12,9 @@ int duration(string fraction)
 {
 
 
-    int num = (int)fraction[0] - '0';
-    int denom = (int)fraction[2] - '0';
-    int beat = ((num / denom) / 0.125);
+    int num = fraction[0] - '0';
+    int denom = fraction[2] - '0';
+    int beat = ((8 / denom) * num);
 
     return beat;
 }
