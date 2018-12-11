@@ -10,8 +10,11 @@
 // Converts a fraction formatted as X/Y to eighths
 int duration(string fraction)
 {
-    int denom = ((strlen(fraction)) - 1) - '0';
-    int beat = 8/denom;
+
+
+    int num = (int)fraction[0] - '0';
+    int denom = (int)fraction[2] - '0';
+    int beat = ((num / denom) / 0.125);
 
     return beat;
 }
@@ -21,7 +24,7 @@ int frequency(string note)
 {
     int freq;
     int semitone;
-    int octave = ((strlen(note)) - 1) - '0';
+    int octave = note[strlen(note) - 1] - '0';
 
     switch (note[0])
     {
@@ -57,23 +60,19 @@ int frequency(string note)
         return 0;
     }
 
-        if (note[1] == 35)
+        if ((int)note[1] == 35)
         {
-            semitone = semitone + 1.0;
+            semitone += 1.0;
         }
-        else if (note[1] == 98)
+        else if ((int)note[1] == 98)
         {
-            semitone = semitone - 1.0;
+            semitone -= 1.0;
         }
 
-    if (octave <= 8 && octave >= 0)
+    if (octave >= 0  && octave <= 8)
         {
-            semitone = semitone + ((octave - 4.0) * 12.0);
+            semitone += (octave - 4.0) * 12.0;
         }
-    // if (octave > 8 || octave < 0)
-    // {
-    //     return 0;
-    // }
 
     freq = round(pow(2.0, (semitone/12.0)) * 440.00);
     return freq;
@@ -82,7 +81,7 @@ int frequency(string note)
 // Determines whether a string represents a rest
 bool is_rest(string s)
 {
-    if (strlen(s) == 0)
+    if (s[0] == '\0')
     {
         return true;
     }
