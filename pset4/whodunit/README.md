@@ -53,4 +53,4 @@ a constant in the FSEEK function that moves file pointer position to given locat
 
 ## Whodunit?
 
-TODO
+Professor Plum in the library with the candlestick
