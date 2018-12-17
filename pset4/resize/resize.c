@@ -15,17 +15,15 @@ int main(int argc, char *argv[])
     }
 
     //converts the resizer n  into an integer
-    int resizer = atoi(argv[1]);
+    long resizer = atoi(argv[1]);
     if (resizer < 0 || resizer > 100)
     {
         fprintf(stderr, "Please enter a positive integer less than or equal to 100\n");
         return 1;
     }
 
-    // int *n;
-    // n = &resizer;
-    // n = resizer[0];
-    // printf("resizer: %i\n", n);
+    long *n;
+    n = &resizer;
 
     // remember filenames
     char *infile = argv[2];
@@ -69,7 +67,9 @@ int main(int argc, char *argv[])
 
     // write outfile's BITMAPFILEHEADER
     fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
-
+    bi.biWidth *= *n;
+    bi.biHeight *= *n;
+    //bi.biSizeImage = i * 2;
     // write outfile's BITMAPINFOHEADER
     fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);
 
@@ -82,13 +82,22 @@ int main(int argc, char *argv[])
         // iterate over pixels in scanline
         for (int j = 0; j < bi.biWidth; j++)
         {
+            //printf("resizer: %p\n", (void*)n);
             // temporary storage
             RGBTRIPLE triple;
+
 
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
 
+
+            // if (i % 2 == 0)
+            // {
+            //      fgets(bi.biWidth)
+            // }
             //this is we resize horizontally
+
+
 
             // write RGB triple to outfile
             fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
@@ -102,6 +111,8 @@ int main(int argc, char *argv[])
         {
             fputc(0x00, outptr);
         }
+
+        //bf.bfSize =
     }
 
     // close infile
