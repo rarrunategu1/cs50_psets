@@ -94,19 +94,13 @@ int main(int argc, char *argv[])
     // 2 % 4
     // 2
     RGBTRIPLE *newPixelsArr = malloc(sizeof(RGBTRIPLE) * bi.biWidth);
-    if (newPixelsArr == NULL)
+
+    // iterate over infile's scanlines
+    for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
     {
-        fprintf(stderr, "Memory Allocation is equal to NULL.\n");
-        return 1;
-    }
-    else
+        // iterate over pixels in scanline
+        for (int j = 0; j < bi.biWidth; j++)
     {
-        // iterate over infile's scanlines
-        for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
-        {
-            // iterate over pixels in scanline
-            for (int j = 0; j < bi.biWidth; j++)
-        {
 
             // temporary storage
             RGBTRIPLE triple;
@@ -116,7 +110,11 @@ int main(int argc, char *argv[])
 
 
 
-
+                if (newPixelsArr == NULL)
+                {
+                    fprintf(stderr, "Memory Allocation is equal to NULL.\n");
+                    return 1;
+                }
             // write RGB triple to outfile
             fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
 
@@ -126,12 +124,10 @@ int main(int argc, char *argv[])
         // skip over padding, if any
         fseek(inptr, padding, SEEK_CUR);
 
-            // then add it back (to demonstrate how)
-            for (int k = 0; k < padding; k++)
-            {
-                fputc(0x00, outptr);
-            }
-
+        // then add it back (to demonstrate how)
+        for (int k = 0; k < padding; k++)
+        {
+            fputc(0x00, outptr);
         }
     }
 
