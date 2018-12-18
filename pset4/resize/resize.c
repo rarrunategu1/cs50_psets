@@ -65,16 +65,35 @@ int main(int argc, char *argv[])
         return 4;
     }
 
+    BITMAPINFOHEADER biNew;
+
+    biNew.biWidth = bi.biWidth *= *n;
+    biNew.biHeight = bi.biHeight *= *n;
+
+    int newPadding = (4 - (biNew.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
+
+    bi.biSizeImage = ((sizeof(RGBTRIPLE) * biNew.biWidth) + newPadding) * abs(biNew.biHeight);
+    bf.bfSize = bi.biSizeImage + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+
+    printf("%i\n", bf.bfSize);
+
+
     // write outfile's BITMAPFILEHEADER
     fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
-    bi.biWidth *= *n;
-    bi.biHeight *= *n;
-    //bi.biSizeImage = i * 2;
+
+    printf("%i\n", bi.biSizeImage);
+
     // write outfile's BITMAPINFOHEADER
     fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);
 
     // determine padding for scanlines
     int padding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
+    // (4 - (6 * 3) %4) %4
+    // (4 - 18 % 4) %4
+    // (4 - 2) %4
+    // 2 % 4
+    // 2
+    typedef RGBTRIPLE[biNew.biWidth];
 
     // iterate over infile's scanlines
     for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
@@ -83,6 +102,8 @@ int main(int argc, char *argv[])
         for (int j = 0; j < bi.biWidth; j++)
         {
             //printf("resizer: %p\n", (void*)n);
+
+
             // temporary storage
             RGBTRIPLE triple;
 
@@ -90,13 +111,9 @@ int main(int argc, char *argv[])
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
 
-
-            // if (i % 2 == 0)
-            // {
-            //      fgets(bi.biWidth)
-            // }
-            //this is we resize horizontally
-
+            //printf("%d\n", j);
+            // while ( j < biNew.biWidth)
+            // j + (sizeof(RGBTRIPLE)* i);
 
 
             // write RGB triple to outfile
