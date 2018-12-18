@@ -93,43 +93,46 @@ int main(int argc, char *argv[])
     // (4 - 2) %4
     // 2 % 4
     // 2
-    typedef RGBTRIPLE[biNew.biWidth];
-
-    // iterate over infile's scanlines
-    for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
+    RGBTRIPLE *newPixelsArr = malloc(sizeof(RGBTRIPLE) * bi.biWidth);
+    if (newPixelsArr == NULL)
     {
-        // iterate over pixels in scanline
-        for (int j = 0; j < bi.biWidth; j++)
+        fprintf(stderr, "Memory Allocation is equal to NULL.\n");
+        return 1;
+    }
+    else
+    {
+        // iterate over infile's scanlines
+        for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
         {
-            //printf("resizer: %p\n", (void*)n);
-
+            // iterate over pixels in scanline
+            for (int j = 0; j < bi.biWidth; j++)
+        {
 
             // temporary storage
             RGBTRIPLE triple;
 
-
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
 
-            //printf("%d\n", j);
-            // while ( j < biNew.biWidth)
-            // j + (sizeof(RGBTRIPLE)* i);
+
 
 
             // write RGB triple to outfile
             fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
+
+            free(newPixelsArr);
         }
 
         // skip over padding, if any
         fseek(inptr, padding, SEEK_CUR);
 
-        // then add it back (to demonstrate how)
-        for (int k = 0; k < padding; k++)
-        {
-            fputc(0x00, outptr);
-        }
+            // then add it back (to demonstrate how)
+            for (int k = 0; k < padding; k++)
+            {
+                fputc(0x00, outptr);
+            }
 
-        //bf.bfSize =
+        }
     }
 
     // close infile
