@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "bmp.h"
 
@@ -22,7 +23,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    long *n;
+    long *n = NULL;
     n = &resizer;
 
     // remember filenames
@@ -75,13 +76,13 @@ int main(int argc, char *argv[])
     bi.biSizeImage = ((sizeof(RGBTRIPLE) * biNew.biWidth) + newPadding) * abs(biNew.biHeight);
     bf.bfSize = bi.biSizeImage + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
 
-    printf("%i\n", bf.bfSize);
+    //printf("%i\n", bf.bfSize);
 
 
     // write outfile's BITMAPFILEHEADER
     fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
 
-    printf("%i\n", bi.biSizeImage);
+    //printf("%i\n", bi.biSizeImage);
 
     // write outfile's BITMAPINFOHEADER
     fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);
@@ -93,8 +94,12 @@ int main(int argc, char *argv[])
     // (4 - 2) %4
     // 2 % 4
     // 2
-    RGBTRIPLE *newPixelsArr = malloc(sizeof(RGBTRIPLE) * bi.biWidth);
-
+    BYTE *newPixelsArr = malloc(sizeof(RGBTRIPLE) * bi.biWidth);
+    // if (newPixelsArr == NULL)
+    // {
+    //     fprintf(stderr, "Memory Allocation is equal to NULL.\n");
+    //     return 1;
+    // }
     // iterate over infile's scanlines
     for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
     {
@@ -108,17 +113,22 @@ int main(int argc, char *argv[])
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
 
+            printf("j: %d\n", j);
+
+            // triple.rgbtGreen *= *n;
+            // triple.rgbtBlue *= *n;
+            // triple.rgbtRed *= *n;
+            printf("Blue: %hhu\n Green: %hhu\n Red: %hhu\n", triple.rgbtBlue, triple.rgbtGreen, triple.rgbtRed);
+
+            //newPixelsArr* = &triple;
 
 
-                if (newPixelsArr == NULL)
-                {
-                    fprintf(stderr, "Memory Allocation is equal to NULL.\n");
-                    return 1;
-                }
+
+
             // write RGB triple to outfile
             fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
 
-            free(newPixelsArr);
+            //free(newPixelsArr);
         }
 
         // skip over padding, if any
