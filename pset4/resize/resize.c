@@ -94,12 +94,16 @@ int main(int argc, char *argv[])
     // (4 - 2) %4
     // 2 % 4
     // 2
-    BYTE *newPixelsArr = malloc(sizeof(RGBTRIPLE) * bi.biWidth);
+
+
+    //RGBTRIPLE *newPixelsArr = malloc(sizeof(RGBTRIPLE) * bi.biWidth);
     // if (newPixelsArr == NULL)
     // {
     //     fprintf(stderr, "Memory Allocation is equal to NULL.\n");
     //     return 1;
     // }
+
+    RGBTRIPLE triple;
     // iterate over infile's scanlines
     for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
     {
@@ -108,37 +112,40 @@ int main(int argc, char *argv[])
     {
 
             // temporary storage
-            RGBTRIPLE triple;
+            //RGBTRIPLE triple;
+
+            printf("%i\n", j);
 
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
 
-            printf("j: %d\n", j);
+            //printf("Blue: %hhu\n Green: %hhu\n Red: %hhu\n", triple.rgbtBlue, triple.rgbtGreen, triple.rgbtRed);
 
-            // triple.rgbtGreen *= *n;
-            // triple.rgbtBlue *= *n;
-            // triple.rgbtRed *= *n;
-            printf("Blue: %hhu\n Green: %hhu\n Red: %hhu\n", triple.rgbtBlue, triple.rgbtGreen, triple.rgbtRed);
-
-            //newPixelsArr* = &triple;
-
-
-
-
-            // write RGB triple to outfile
+            for (int k = 0; k < n[0]; k++)
+        {
             fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
+            printf("Blue: %hhu\n Green: %hhu\n Red: %hhu\n", triple.rgbtBlue, triple.rgbtGreen, triple.rgbtRed);
+        }
+    }
 
-            //free(newPixelsArr);
+            for (int l = 0; l < newPadding; l++)
+        {
+            fputc(0x00, outptr);
         }
 
         // skip over padding, if any
         fseek(inptr, padding, SEEK_CUR);
 
+        // for (int m = 0; m < n[0]; m++)
+        // {
+        //     fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
+        // }
+
         // then add it back (to demonstrate how)
-        for (int k = 0; k < padding; k++)
-        {
-            fputc(0x00, outptr);
-        }
+
+
+        //printf("Blue: %hhu\n Green: %hhu\n Red: %hhu\n", triple.rgbtBlue, triple.rgbtGreen, triple.rgbtRed);
+
     }
 
     // close infile
