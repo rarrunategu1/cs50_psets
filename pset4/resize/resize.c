@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "bmp.h"
 
@@ -15,21 +14,20 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    //converts the resizer n  into an integer
-    long resizer = atoi(argv[1]);
+    // remember filenames
+    char *infile = argv[2];
+    char *outfile = argv[3];
+
+    //converts first argument into an int
+    int resizer = atoi(argv[1]);
+    printf("Resizer: %i\n", resizer);
+
+    //check if resizer is between 0 and 100
     if (resizer < 0 || resizer > 100)
     {
         fprintf(stderr, "Please enter a positive integer less than or equal to 100\n");
         return 1;
     }
-
-    long *n = NULL;
-    n = &resizer;
-
-    // remember filenames
-    char *infile = argv[2];
-    char *outfile = argv[3];
-
 
     // open input file
     FILE *inptr = fopen(infile, "r");
@@ -66,87 +64,75 @@ int main(int argc, char *argv[])
         return 4;
     }
 
-    BITMAPINFOHEADER biNew;
+    //new height, width and padding to include resizer
+    BITMAPINFOHEADER biNew = bi;
+    BITMAPFILEHEADER bfNew = bf;
 
-    biNew.biWidth = bi.biWidth *= *n;
-    biNew.biHeight = bi.biHeight *= *n;
-
+    biNew.biWidth *= resizer;
+    biNew.biHeight *= resizer;
     int newPadding = (4 - (biNew.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
 
-    bi.biSizeImage = ((sizeof(RGBTRIPLE) * biNew.biWidth) + newPadding) * abs(biNew.biHeight);
-    bf.bfSize = bi.biSizeImage + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+    //printf("New biWidth: %d\n", biNew.biWidth);
+    //printf("New biHeight: %d\n", biNew.biHeight);
 
-    //printf("%i\n", bf.bfSize);
-
+    biNew.biSizeImage = (sizeof(RGBTRIPLE) * biNew.biWidth + newPadding) * abs(biNew.biHeight);
+    bfNew.bfSize = biNew.biSizeImage + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
 
     // write outfile's BITMAPFILEHEADER
-    fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
-
-    //printf("%i\n", bi.biSizeImage);
+    fwrite(&bfNew, sizeof(BITMAPFILEHEADER), 1, outptr);
 
     // write outfile's BITMAPINFOHEADER
-    fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);
+    fwrite(&biNew, sizeof(BITMAPINFOHEADER), 1, outptr);
 
     // determine padding for scanlines
     int padding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
-    // (4 - (6 * 3) %4) %4
-    // (4 - 18 % 4) %4
-    // (4 - 2) %4
-    // 2 % 4
-    // 2
 
-
-    //RGBTRIPLE *newPixelsArr = malloc(sizeof(RGBTRIPLE) * bi.biWidth);
-    // if (newPixelsArr == NULL)
-    // {
-    //     fprintf(stderr, "Memory Allocation is equal to NULL.\n");
-    //     return 1;
-    // }
-
-    RGBTRIPLE triple;
     // iterate over infile's scanlines
     for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
     {
-        // iterate over pixels in scanline
-        for (int j = 0; j < bi.biWidth; j++)
-    {
-
-            // temporary storage
-            //RGBTRIPLE triple;
-
-            printf("%i\n", j);
-
-            // read RGB triple from infile
-            fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
-
-            //printf("Blue: %hhu\n Green: %hhu\n Red: %hhu\n", triple.rgbtBlue, triple.rgbtGreen, triple.rgbtRed);
-
-            for (int k = 0; k < n[0]; k++)
+        //part one of recopy method iterates vertically
+        for (int vertical = 0; vertical < resizer; vertical++)
         {
-            fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
-            printf("Blue: %hhu\n Green: %hhu\n Red: %hhu\n", triple.rgbtBlue, triple.rgbtGreen, triple.rgbtRed);
+
+            // iterate over pixels in scanline
+            for (int j = 0; j < bi.biWidth; j++)
+            {
+                // temporary storage
+                RGBTRIPLE triple;
+
+                // read RGB triple from infile
+                fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
+
+                for (int k = 0; k < resizer; k++)
+
+                    // write RGB triple to outfile
+                    fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
+
+                    //printf("position: %d\n Blue: %hhu\n Green: %hhu\n Red: %hhu\n", j, triple.rgbtBlue, triple.rgbtGreen, triple.rgbtRed);
+
+            }
+
+
+            // then add it back (to demonstrate how)
+            for (int k = 0; k < newPadding; k++)
+            {
+                fputc(0x00, outptr);
+            }
+
+            // skip over padding, if any
+            fseek(inptr, padding, SEEK_CUR);
+
+            //recopy method part 2 - infile cursor is at beginning of row- SEEK_CUR
+            //write the pixels, resizer - 1 times, scaling horizontally to the outfile
+            //fseek sends it back to the beginning of the row and repeats the process resizer-1 times
+            //then padding is added and we skip over infile padding to then do the next row
+            if (vertical < resizer - 1)
+            {
+                fseek(inptr, -(bi.biWidth * 3 + padding), SEEK_CUR);
+            }
         }
     }
 
-            for (int l = 0; l < newPadding; l++)
-        {
-            fputc(0x00, outptr);
-        }
-
-        // skip over padding, if any
-        fseek(inptr, padding, SEEK_CUR);
-
-        // for (int m = 0; m < n[0]; m++)
-        // {
-        //     fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
-        // }
-
-        // then add it back (to demonstrate how)
-
-
-        //printf("Blue: %hhu\n Green: %hhu\n Red: %hhu\n", triple.rgbtBlue, triple.rgbtGreen, triple.rgbtRed);
-
-    }
 
     // close infile
     fclose(inptr);
