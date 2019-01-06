@@ -65,6 +65,14 @@ int main (int argc, char* argv[])
             fwrite (&buffer, 1, 512, img);
          }
 
+    }
+    // else
+    // {
+    //     if(jpeg_found)
+    //     {
+    //         fwrite(&buffer, 1, 512, img);
+    //     }
+    // }
 }
     // close infile
     fclose(raw_file);
@@ -74,8 +82,5 @@ int main (int argc, char* argv[])
 
     // success
     return 0;
-
-
-}
 
 }
