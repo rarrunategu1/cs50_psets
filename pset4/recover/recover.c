@@ -66,13 +66,13 @@ int main (int argc, char* argv[])
          }
 
     }
-    // else
-    // {
-    //     if(jpeg_found)
-    //     {
-    //         fwrite(&buffer, 1, 512, img);
-    //     }
-    // }
+    else
+    {
+        if(jpeg_found)
+        {
+            fwrite(&buffer, 1, 512, img);
+        }
+    }
 }
     // close infile
     fclose(raw_file);
