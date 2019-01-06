@@ -5,15 +5,15 @@
 
 #define FAT_BLOCK_SIZE 512
 
-int main (int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     if (argc != 2)
     {
-        fprintf(stderr, "USAGE: ./recover forensicPic\n" );
+        fprintf(stderr, "USAGE: ./recover forensicPic\n");
         return 1;
     }
 
-    char* forensicPic = argv[1];
+    char *forensicPic = argv[1];
 
 
     FILE *raw_file = fopen(forensicPic, "r");
@@ -25,55 +25,59 @@ int main (int argc, char* argv[])
 
     uint8_t buffer[FAT_BLOCK_SIZE];
     bool jpeg_found = false;
-    FILE* img = NULL;
+    FILE *img = NULL;
     char recoveredJpegs[50];
     int fileCount = 0;
 
-    //reads blocks from the images
+    //reads blocks from the images until file is read all the way through
     while (fread(&buffer, 1, FAT_BLOCK_SIZE, raw_file))
     {
-        if(buffer[0] == 0xff && buffer[1] == 0xd8 && buffer[2] == 0xff && (buffer[3] & 0xf0) == 0xe0)
+        if (buffer[0] == 0xff && buffer[1] == 0xd8 && buffer[2] == 0xff && (buffer[3] & 0xf0) == 0xe0)
         {
-            if(!jpeg_found)
+            if (!jpeg_found)
             {
                 jpeg_found = true;
 
                 //saves the files one at a time
                 sprintf(recoveredJpegs, "%03i.jpg", fileCount++);
+
                 //opens file to with writin permissions
-                img = fopen(recoveredJpegs,"w");
+                img = fopen(recoveredJpegs, "w");
                 if (img == NULL)
-                 {
+                {
                     fprintf(stderr, "Could not open %s for reading.\n", forensicPic);
                     return 3;
                 }
-                fwrite (&buffer, 1, 512, img);
+                //writes until new jpeg found
+                fwrite(&buffer, 1, 512, img);
+            }
+            else
+            {
+                //if new jpeg found it closes the last file and writes the new one
+                fclose(img);
+
+                sprintf(recoveredJpegs, "%03i.jpg", fileCount++);
+                //opens file to with writing permissions
+                img = fopen(recoveredJpegs, "w");
+                if (img == NULL)
+                {
+                    fprintf(stderr, "Could not open %s for reading.\n", forensicPic);
+                    return 3;
+
+                }
+                fwrite(&buffer, 1, 512, img);
+            }
+
         }
         else
         {
-            fclose(img);
-
-            sprintf(recoveredJpegs, "%03i.jpg", fileCount++);
-            //opens file to with writin permissions
-            img = fopen(recoveredJpegs,"w");
-            if (img == NULL)
+            //if jpeg found it begins writing the file
+            if (jpeg_found)
             {
-                fprintf(stderr, "Could not open %s for reading.\n", forensicPic);
-                return 3;
-
+                fwrite(&buffer, 1, 512, img);
             }
-            fwrite (&buffer, 1, 512, img);
-         }
-
-    }
-    else
-    {
-        if(jpeg_found)
-        {
-            fwrite(&buffer, 1, 512, img);
         }
     }
-}
     // close infile
     fclose(raw_file);
 
