@@ -1,5 +1,7 @@
 #include <cs50.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
 
 #define FAT_BLOCK_SIZE 512
 
@@ -13,6 +15,7 @@ int main (int argc, char* argv[])
 
     char* forensicPic = argv[1];
 
+
     FILE *raw_file = fopen(forensicPic, "r");
     if (raw_file == NULL)
     {
@@ -20,38 +23,59 @@ int main (int argc, char* argv[])
         return 2;
     }
 
-    unsigned char *buffer = malloc(FAT_BLOCK_SIZE);
-    if (buffer == NULL)
-    {
-        fprintf(stderr, "Memory is not sufficient");
-    }
-
-
-    char recoveredJpegs[8];
+    uint8_t buffer[FAT_BLOCK_SIZE];
+    bool jpeg_found = false;
+    FILE* img = NULL;
+    char recoveredJpegs[50];
+    int fileCount = 0;
 
     //reads blocks from the images
-    while (fread(buffer, FAT_BLOCK_SIZE, 1, raw_file))
+    while (fread(&buffer, 1, FAT_BLOCK_SIZE, raw_file))
     {
         if(buffer[0] == 0xff && buffer[1] == 0xd8 && buffer[2] == 0xff && (buffer[3] & 0xf0) == 0xe0)
         {
-            //saves the files one at a time
-            sprintf(recoveredJpegs, "%03i.jpg", 2);
+            if(!jpeg_found)
+            {
+                jpeg_found = true;
 
+                //saves the files one at a time
+                sprintf(recoveredJpegs, "%03i.jpg", fileCount++);
+                //opens file to with writin permissions
+                img = fopen(recoveredJpegs,"w");
+                if (img == NULL)
+                 {
+                    fprintf(stderr, "Could not open %s for reading.\n", forensicPic);
+                    return 3;
+                }
+                fwrite (&buffer, 1, 512, img);
         }
+        else
+        {
+            fclose(img);
 
+            sprintf(recoveredJpegs, "%03i.jpg", fileCount++);
+            //opens file to with writin permissions
+            img = fopen(recoveredJpegs,"w");
+            if (img == NULL)
+            {
+                fprintf(stderr, "Could not open %s for reading.\n", forensicPic);
+                return 3;
 
-    //opens file to with writin permissions
-    FILE *img = fopen(recoveredJpegs,"w");
+            }
+            fwrite (&buffer, 1, 512, img);
+         }
 
-        //if block doesn't indicate a jpeg header keep reading
-        //if the block is a jpeg header then you know it's a jpeg
-        //once you reach another jpeg header you reached the end of a jpeg so you can close it and start a new one which is the beginning of a jpeg
+}
+    // close infile
+    fclose(raw_file);
 
-    //writes to file
-    //fwrite(data, size, number, recoveredJpegs);
+    // close outfile
+    fclose(img);
+
+    // success
+    return 0;
 
 
 }
-
 
 }
